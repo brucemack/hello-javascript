@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <script src="main.js"></script>
+        <script src="table.js"></script>
+        <style>
+.t4-arrow-open:before {
+    margin-right: 5px;
+    content: "\25BA";
+}
+.t4-arrow-closed:before {
+    margin-right: 5px;
+    content: "\25BC";
+}
+.t4-arrow-none:before {
+    margin-right: 5px;
+    content: "\25BC";
+    visibility: hidden;
+}
+        </style>
+    </head>
+    <body>
+        <div>
+            <div id="table1"/>
+        </div>
+        <script>
+// self executing function here
+
+tableDef = {
+    columns: [
+        {
+            title: "Hi"
+        },
+        {
+            title: "Izzy"
+        }
+    ]
+};
+
+tableData = {
+    root: {
+        name: "Total",
+        children: [
+            {
+                name: "Level 1a",
+                closed: true,
+                children: [
+                    {
+                        name: "Level 2a"
+                    }
+                ]
+            },
+            {
+                name: "Level 1b"
+            }
+        ]
+    }
+};
+
+(function() {
+    console.log("Loaded")
+    draw_table(document.getElementById("table1"), tableDef, tableData);
+})();
+        </script>
+    </body>
+</html>
