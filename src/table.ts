@@ -1,3 +1,13 @@
+// Structure for column definition
+
+export interface ColumnDefinition {
+    title: string;
+};
+
+export interface ColumnDefinitions {
+    columns: ColumnDefinition[]
+}
+
 function clearChildren(el:Element) {
     while (el.firstChild) el.removeChild(el.firstChild);
 }
@@ -51,7 +61,9 @@ function create_table_row(tbodyEl: Element, item:any , depth:number) {
     }
 }
 
-function draw_table(root:Element, tableDef:any, tableData: any) {
+export function draw_table(root: Element | null, tableDef:any, tableData: any) {
+    if (!root)
+        return;
     // Clear existing table
     clearChildren(root);
     // Create the table
@@ -63,11 +75,11 @@ function draw_table(root:Element, tableDef:any, tableData: any) {
     tableEl.appendChild(headEl);
 
     // Iterate across the definition and create the column headers
-    tableDef.columns.forEach(function (item: any, index: number) {
+    tableDef.columns.forEach(function (def: ColumnDefinition, index: number) {
         var thEl:Element = document.createElement("th");
         headEl.appendChild(thEl);
-        if (item.title)
-            setText(thEl,item.title)
+        if (def.title)
+            setText(thEl,def.title)
     });
 
     // Iterate across the data and create rows
