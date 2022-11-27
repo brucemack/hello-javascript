@@ -1,16 +1,5 @@
 import * as t4 from "./table"
 
-var tableDef: t4.ColumnDefinitions = {
-    columns: [
-        {
-            title: "Hi"
-        },
-        {
-            title: "Izzy"
-        }
-    ]
-};
-
 var tableData: t4.TreeData = {
     root: {
         title: "Total",
@@ -31,7 +20,47 @@ var tableData: t4.TreeData = {
     }
 };
 
+var tableDef: t4.TableDefinition = {
+    columns: [
+        {
+            title: "Other",
+            cellGenerator: (tableDef: t4.TableDefinition, 
+                item: Readonly<t4.TreeItem>, depth: number, path: readonly number[]) => {
+                var tdEl: HTMLTableCellElement = document.createElement("td");
+                var t:string = "Hello ";
+                path.forEach((item, ix) => {
+                    t += "" + item + ",";
+                });
+                tdEl.innerHTML = t;
+                return tdEl;
+            }
+        },
+        {
+            title: "Hi",
+            cellGenerator: t4.titleCellGenerator
+        },
+        {
+            title: "Izzy",
+            cellGenerator: (tableDef: t4.TableDefinition, 
+                item: Readonly<t4.TreeItem>, depth: number, path: readonly number[]) => {
+                var tdEl: HTMLTableCellElement = document.createElement("td");
+                tdEl.innerHTML = "Second " + depth;
+                return tdEl;
+            }
+        }
+    ],
+    // Callback used to handle the open/close events
+    onOpenClose: (path: readonly number[]) => {
+        var item: t4.TreeItem = t4.resolvePath(tableData.root, path);
+        if (item) {
+            item.closed = !item.closed;
+            // Redraw
+            t4.render(document.getElementById("table1"), tableDef, tableData);
+        }
+    }
+};
+
 (function() {
-    t4.draw_table(document.getElementById("table1"), tableDef, tableData);
+    t4.render(document.getElementById("table1"), tableDef, tableData);
 })();
 

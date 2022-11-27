@@ -3,13 +3,33 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
         <style>
+.t4-table {
+    border-collapse: collapse;
+}
+
+.t4-table thead tr th {
+    border: 1px solid black;
+}
+
+.t4-table tbody tr td {
+    border: 1px solid black;
+}
+
+.t4-table tbody tr.odd td {
+    background: #dddddd;
+}
+
+.t4-arrow-open, .t4-arrow_closed {
+    cursor: pointer;
+}
+
 .t4-arrow-open:before {
     margin-right: 5px;
-    content: "\25BA";
+    content: "\25BC";
 }
 .t4-arrow-closed:before {
     margin-right: 5px;
-    content: "\25BC";
+    content: "\25BA";
 }
 .t4-arrow-none:before {
     margin-right: 5px;
