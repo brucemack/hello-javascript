@@ -23,6 +23,7 @@ var tableData: t4.TreeData = {
 var tableDef: t4.TableDefinition = {
     columns: [
         {
+            width: 200,
             title: "Other",
             cellGenerator: (tableDef: t4.TableDefinition, 
                 item: Readonly<t4.TreeItem>, depth: number, path: readonly number[]) => {

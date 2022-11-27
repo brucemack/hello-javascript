@@ -1,6 +1,8 @@
 // Structure for column definition
 
 export interface ColumnDefinition {
+    // Width in px
+    width?: number,
     // Displayed on the column header
     title: string,
     // Creates the <td> element for the specified column
@@ -139,12 +141,70 @@ export function render(root: HTMLElement | null,
     var trEl:Element = document.createElement("tr");
     theadEl.appendChild(trEl);
 
+    var mouseDown: boolean = false;
+    var mouseDownX: number;
+    var mouseDownY: number;
+    var mouseMoveHandler: (screenX: number, screenY: number) => void;
+
+    // Setup mouse tracking to use used for resizing and other drag events
+    tableEl.addEventListener("mousedown", (ev: MouseEvent)  => {
+        // Record the starting position
+        mouseDown = true;
+        mouseDownX = ev.screenX;
+        mouseDownY = ev.screenY;
+    });
+    tableEl.addEventListener("mousemove", (ev: MouseEvent) => {
+        if (mouseDown) {
+            var deltaX: number = (ev.screenX - mouseDownX);
+            if (mouseMoveHandler) {
+                mouseMoveHandler(ev.screenX, ev.screenY);
+            }
+        }
+    });
+    tableEl.addEventListener("mouseup", (ev: MouseEvent) => {
+        mouseDown = false;
+    });
+
     // Iterate across the definition and create the column headers
     tableDef.columns.forEach(function (def: ColumnDefinition, index: number) {
-        var thEl:Element = document.createElement("th");
+
+        var thEl:HTMLTableCellElement = document.createElement("th");
         trEl.appendChild(thEl);
+        thEl.style.position = "relative"
+
+        // Put in the resizer tab into the header agains the right edge
+        var resizerEl:HTMLElement = document.createElement("div");
+        thEl.appendChild(resizerEl);
+
+        resizerEl.classList.add("resizer");
+        resizerEl.style.position = "absolute";
+        resizerEl.style.top = "0";
+        resizerEl.style.right = "0";
+        resizerEl.style.width = "10px";
+        resizerEl.style.height = "100%";
+        resizerEl.style.cursor = "col-resize";
+        resizerEl.style.userSelect = "none";
+        //resizerEl.style.background = "red";
+
+        // Setup a handler for resizing the column
+        resizerEl.addEventListener("mousedown", (ev: MouseEvent)  => {
+            // Record the starting width of the column so that we can determine the change
+            var mouseDownWidth: number = thEl.clientWidth;
+            // Install the callback that will deal with resize of the column
+            mouseMoveHandler = (screenX: number, screenY: number) => {
+                var deltaX: number = screenX - mouseDownX;
+                // Enforce limit
+                if (mouseDownWidth + deltaX > 5)
+                    thEl.style.width = (mouseDownWidth + deltaX) + "px";
+            }
+        });
+
         if (def.title)
             setText(thEl,def.title)
+
+            // Check for manual width setups
+        if (def.width)
+            thEl.style.width = "" + def.width + "px"
     });
 
     // Iterate across the data and create rows
