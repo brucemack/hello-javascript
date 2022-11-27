@@ -11,28 +11,27 @@ var tableDef: t4.ColumnDefinitions = {
     ]
 };
 
-var tableData = {
+var tableData: t4.TreeData = {
     root: {
-        name: "Total",
+        title: "Total",
         children: [
             {
-                name: "Level 1a",
-                closed: true,
+                title: "Level 1a",
+                closed: false,
                 children: [
                     {
-                        name: "Level 2a"
+                        title: "Level 2a"
                     }
                 ]
             },
             {
-                name: "Level 1b"
+                title: "Level 1b"
             }
         ]
     }
 };
 
 (function() {
-    console.log("Loaded")
     t4.draw_table(document.getElementById("table1"), tableDef, tableData);
 })();
 
